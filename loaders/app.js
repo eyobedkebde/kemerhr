@@ -1,8 +1,12 @@
 const express = require("express");
+
 const app = express();
+
+const organization = require('../api/organization/router')
+
 app.use(express.json());
 
-//routes
+app.use('v1/organization', organization)
 
 
 
