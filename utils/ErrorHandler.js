@@ -1,3 +1,5 @@
+const config = require('../config/index')
+
 const AppError = function(message, statusCode){
 
     //populate the current objects to the builtin Error constructor
@@ -12,4 +14,21 @@ const AppError = function(message, statusCode){
     Error.captureStackTrace(this, this.constructor);
 }
 
-module.exports = AppError;
+module.exports.geh = (err, req, res, next)=>{
+
+    // Error status and status code
+    err.status = err.status || "ERROR";
+    err.statusCode = err.statusCode || 500;
+
+    if (config.env === "Development") {
+        res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+        error: err,
+        errorStack: err.stack,
+      });
+    }
+    
+}
+
+module.exports.AppError = AppError;

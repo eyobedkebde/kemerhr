@@ -13,6 +13,8 @@ module.exports.login = async (req, res, next)=>{
 
         res.json({
             message: "successfuly logged in",
+            token,
+            user
         })
 
     }catch(err){
