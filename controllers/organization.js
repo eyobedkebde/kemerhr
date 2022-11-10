@@ -19,3 +19,23 @@ module.exports.login = async (req, res, next)=>{
         next(err)
     }
 }
+
+
+// register
+module.exports.createOrganization = async(req, res, next) =>{
+    try {
+        const {name, email,password, phoneNumber} = req.body;
+        if (!name || ! email || !password || !phoneNumber){
+            console.log("Field can't be empty!")
+        }
+        
+        const {user} = await resgisterOrgService(name, email,password, phoneNumber);
+        res.json({
+            message:"Registed successfully!",
+            user: user
+
+        })
+    } catch (error) {
+        next(error)
+    }
+}
