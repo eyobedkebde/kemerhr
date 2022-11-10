@@ -1,5 +1,4 @@
 
-const pool =require('../config/dbconfig');
 const organizationDAL = require('../DAL/organization');
 const {createToken} = require('../utils/createJwt');
 
