@@ -1,7 +1,7 @@
 
 const organizationDAL = require('../DAL/organization');
 const {createToken} = require('../utils/createJwt');
-
+const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.loginService = async(email, password)=>{
     try{
@@ -10,7 +10,7 @@ module.exports.loginService = async(email, password)=>{
         return token;
     }
     catch(err){
-        console.log(err);
+        throw new AppError("Internal error", 403)
     }
 
 }

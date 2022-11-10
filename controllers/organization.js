@@ -1,12 +1,12 @@
 
 const {loginService} = require('../services/organization')
-
+const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
     try{
         const {email, password} = req.body;
         if(! email || !password){
-            console.log("please provide email")
+           throw new AppError("please provide email", 403)
         }
 
         const {token, user} = await loginService(email, password);
