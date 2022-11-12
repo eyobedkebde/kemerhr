@@ -1,5 +1,5 @@
 
-const {loginService} = require('../services/organization')
+const {loginService, resgisterOrgService, setOrganizationCreated} = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -13,8 +13,8 @@ module.exports.login = async (req, res, next)=>{
 
         res.json({
             message: "successfuly logged in",
+            user,
             token,
-            user
         })
 
     }catch(err){
@@ -24,14 +24,15 @@ module.exports.login = async (req, res, next)=>{
 
 
 // register
-module.exports.createOrganization = async(req, res, next) =>{
+module.exports.registerOrganization = async(req, res, next) =>{
     try {
         const {name, email,password, phoneNumber} = req.body;
         if (!name || ! email || !password || !phoneNumber){
-            console.log("Field can't be empty!")
+            throw new AppError("Field can't be empty", 403);
         }
         
-        const {user} = await resgisterOrgService(name, email,password, phoneNumber);
+        const user = await resgisterOrgService(name, email,password, phoneNumber);
+        
         res.json({
             message:"Registed successfully!",
             user: user
@@ -39,5 +40,18 @@ module.exports.createOrganization = async(req, res, next) =>{
         })
     } catch (error) {
         next(error)
+    }
+}
+
+
+module.exports.createOrg = async(req, res, next)=>{
+    try{
+        await setOrganizationCreated(req.tenantId);
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
     }
 }

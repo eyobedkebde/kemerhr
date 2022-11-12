@@ -15,10 +15,19 @@ const AppError = function(message, statusCode){
 }
 
 module.exports.geh = (err, req, res, next)=>{
-
     // Error status and status code
     err.status = err.status || "ERROR";
     err.statusCode = err.statusCode || 500;
+
+    // Token invalid
+  if (err.name === "JsonWebTokenError") err= new AppError("Please login again", 401);
+
+  // Token expired
+  if (err.name === "TokenExpiredError") {err = new AppError("Please login again", 401)};
+  
+  if (err.code === "23505") {
+    err = new AppError(`${err.detail.slice(11)} please use another name for you organization`, 401)
+  };
 
     if (config.env === "Development") {
         res.status(err.statusCode).json({
