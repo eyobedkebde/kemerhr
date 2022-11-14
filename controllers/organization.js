@@ -55,3 +55,69 @@ module.exports.createOrg = async(req, res, next)=>{
         next(err)
     }
 }
+
+
+module.exports.addEmployee = async(req, res, next)=>{
+    try{
+        
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.updateEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.getOneEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+
+module.exports.getEmployees = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.deleteEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}

@@ -29,6 +29,11 @@ exports.isolate = async (req, res, next) => {
         if(user.rows.length === 0){
           throw new AppError("please login with your correct credential!!", 403)
         }
+
+        if(user.rows[0].status === 'Active'){
+          let sql = format('SET search_path TO %L, public', compData.id);
+          await pool.query(sql);
+        }
         
         req.tenantId = compData.id;
         next();

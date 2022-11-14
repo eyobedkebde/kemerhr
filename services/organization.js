@@ -17,3 +17,9 @@ module.exports.resgisterOrgService = async(name, email,password, phoneNumber)=>{
 module.exports.setOrganizationCreated = async(tenantId)=>{
     await organizationDAL.actvateOrg(tenantId)
 }
+
+
+module.exports.addEmployee = async(tenantId, )=>{
+
+    await organizationDAL.actvateOrg(tenantId)
+}

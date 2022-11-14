@@ -13,7 +13,9 @@ class Create{
             
             if(searchPath.rows[0].status === "Active"){
                 return true;
+
             }else{
+                
                 await client.query(`CREATE SCHEMA ${tenantId};`);
 
                 await client.query(`SET search_path TO ${tenantId}, public;`);
@@ -28,11 +30,14 @@ class Create{
 
         }
     }
+
     static async createUserAndTeam(){
         const client = await pool.connect();
         console.log("two")
 
        try{
+            
+
             const createTquery = {
                 // give the query a unique name
                 name: 'create_team',
@@ -47,15 +52,17 @@ class Create{
                     email character varying(100) NOT NULL,phone_number integer NOT NULL,gender character(8) NOT NULL,birthdate date NOT NULL,
                     img text NOT NULL, role character varying(100) NOT NULL, teamid integer NOT NULL, password text NOT NULL,
                     passwordchangedat timestamp with time zone NOT NULL,createdat timestamp with time zone NOT NULL,PRIMARY KEY(id),  
-                    CONSTRAINT team_id FOREIGN KEY(teamid) REFERENCES team(id)  
-                );`,
+                    CONSTRAINT team_id FOREIGN KEY(teamid) REFERENCES team(id)
+                );`
             }
+
 
             await client.query(createTquery);
 
             await client.query(createUserQuery);
 
             await client.release();
+            
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
@@ -70,6 +77,7 @@ class Create{
         console.log("three")
 
         try{
+            
             const createCompainQuery = {
                 // give the query a unique name
                 name: 'create_complain',
@@ -84,7 +92,7 @@ class Create{
                 name: 'create_user_address',
                 text: `CREATE TABLE user_address ( id integer NOT NULL, empid integer NOT NULL, country character varying NOT NULL,
                     city character varying NOT NULL, subcity character varying NOT NULL, wereda integer NOT NULL, housenumber integer NOT NULL,
-                    createdat timestamp with time zone NOT NULL, PRIMARY KEY(id)  
+                    createdat timestamp with time zone NOT NULL, PRIMARY KEY(id), CONSTRAINT employee_id FOREIGN KEY(empid) REFERENCES users(id)
                 );`,
             }
 
@@ -93,6 +101,7 @@ class Create{
             await client.query(createEmpAddressQuery);
 
             await client.release();
+            
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
@@ -110,10 +119,14 @@ class Create{
             const createEmpMartialQuery = {
                 // give the query a unique name
                 name: 'create_user_marital_status',
-                text: `CREATE TABLE user_marital_status (id integer NOT NULL, status character varying(100) NOT NULL,
-                    numberofchildren integer NOT NULL,createdat timestamp with time zone NOT NULL,PRIMARY KEY(id)
+                text: `CREATE TABLE user_marital_status (id integer NOT NULL, status character varying(100) NOT NULL, userid integer NOT NULL, 
+                    numberofchildren integer NOT NULL,createdat timestamp with time zone NOT NULL,PRIMARY KEY(id), CONSTRAINT employee_id  
+                    FOREIGN KEY(userid) REFERENCES users(id)
                 );`,
             }
+
+            //  userid integer NOT NULL,    CONSTRAINT employee_id  
+            //         FOREIGN KEY(userid) REFERENCES users(id)
             
             const createEmpStatuslQuery = {
                 // give the query a unique name
