@@ -31,12 +31,13 @@ exports.isolate = async (req, res, next) => {
         }
 
         if(user.rows[0].status === 'Active'){
+          console.log(compData.id);
           let sql = format('SET search_path TO %L, public', compData.id);
           await pool.query(sql);
         }
         
         if(user.rows[0].status === 'Active'){
-          let sql = format('SET search_path TO %L, public', compData.id);
+          const sql = `SET search_path TO ${compData.id}, public`;
           await pool.query(sql);
         }
         
