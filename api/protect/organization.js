@@ -35,6 +35,11 @@ exports.isolate = async (req, res, next) => {
           await pool.query(sql);
         }
         
+        if(user.rows[0].status === 'Active'){
+          let sql = format('SET search_path TO %L, public', compData.id);
+          await pool.query(sql);
+        }
+        
         req.tenantId = compData.id;
         next();
   } catch (error) {
