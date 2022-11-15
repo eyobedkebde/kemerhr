@@ -1,5 +1,6 @@
 
-const {loginService, complainService, giveFeedBack, removeComplainService, getOneComplainService
+const {loginService, complainService, giveFeedBack, 
+    removeComplainService, getOneComplainService,updateMyPofile
 } = require('../services/employee')
 const {AppError} = require('../utils/ErrorHandler')
 
@@ -93,4 +94,28 @@ module.exports.feedback = async (req, res, next)=>{
     }catch(err){
         next(err)
     }
+}
+
+module.exports.updateProfile = async (req, res, next)=>{
+  try {
+
+    if (!req.file) {
+      return next(new AppError("not file uploaded, please upload file", 400));
+    }
+
+    const data = await updateMyPofile(req. file, req.userId)
+
+    //  return the data after saving to database
+    res.status(200).json({
+      success: true,
+      message: "profile picture has been updated/uploaded",
+      data: data[0],//user
+    });
+  } catch (error) {
+    // destroy the uploaded if it is uploaded but their is a problem while save to database
+    if (data[1]) {
+      await cloudinary.uploader.destroy(data[1]);
+    }
+    next(new AppError(error.message, 500));
+  }
 }

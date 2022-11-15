@@ -2,6 +2,7 @@
 const organizationDAL = require('../DAL/organization');
 const {createToken} = require('../utils/createJwt');
 const {AppError} = require('../utils/ErrorHandler')
+const cloudinary = require('../utils/cloudinary');
 
 module.exports.loginService = async(email, password)=>{
     const result = await organizationDAL.login(email, password);
@@ -23,9 +24,17 @@ module.exports.createTeamService = async (team_name,status)=>{
 }
 
 
-module.exports.addEmployeeDataService = async (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password)=>{
-    
-    return await organizationDAL.addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password);
+module.exports.addEmployeeDataService = async (file, firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password)=>{
+    var pictureURL, picturePublic;
+
+    await cloudinary.uploader
+    .upload(file.path, { folder: "kemerhr/user" })
+    .then((result) => {
+      pictureURL = result.secure_url;
+      picturePublic = result.public_id;
+    });
+
+    return await organizationDAL.addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password);
 }
 
 

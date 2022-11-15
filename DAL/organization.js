@@ -150,7 +150,7 @@ class Organization{
 
 
     }
-    static async addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password) {
+    static async addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password) {
         const client = await pool.connect();
         
         const querystring = `Select * from users where email = $1`;
@@ -163,7 +163,7 @@ class Organization{
         }
         const newPass = await bcrypt.hash(password, 10);
 
-        const createOrgSQL = format('INSERT INTO users (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password, createdat, passwordchangedat) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)', firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, newPass, new Date(), new Date());
+        const createOrgSQL = format('INSERT INTO users (firstname,lastname,email,phone_number,gender,birthdate,img, imgpub,role, teamid, password, createdat, passwordchangedat) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)', firstname,lastname,email,phone_number,gender,birthdate,pictureURL,picturePublic, role, teamid, newPass, new Date(), new Date());
 
         const users = await client.query(createOrgSQL);
        

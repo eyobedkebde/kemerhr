@@ -12,6 +12,10 @@ const {login, registerOrganization,createOrg,
         getallNotices,removeNotice,getFeedbacks, removeFeedbacks
         } = require('../../controllers/organization');
 
+const allowedFileTypes = require('../../utils/fileFilters')
+
+const fileUpload = require('../../utils/uploadFile');
+
 const router= Router();
 
 
@@ -25,7 +29,9 @@ router.post('/createorg', isolate,
         createInterandFeed, createOrg
 );
 
-router.post('/addEmployeeData', isolate, addEmployeeData)
+router.post('/addEmployeeData', isolate, 
+        allowedFileTypes('jpeg', 'jpg', 'png'), 
+        fileUpload.single('photo'), addEmployeeData)
 router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)

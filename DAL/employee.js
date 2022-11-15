@@ -97,6 +97,17 @@ class Employee{
         await client.release()
         
     }
+    
+    static async updateProfilep(pictureURL,picturePublic, userId){
+        const client = await pool.connect();
+
+        const userSQL = format('UPDATE user SET img= %L and imgpub = %L WHERE id= %L', picturePublic, pictureURL, userId);
+
+        const user = await pool.query(userSQL)
+        
+        await client.release()
+        return user;
+    }
 }
 
 
