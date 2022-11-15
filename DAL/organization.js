@@ -239,6 +239,80 @@ class Organization{
 
     }
 
+    static async updateEmployee(id, firstname,lastname,email,phone_number){
+        const client = await pool.connect();
+
+        
+        const querystring = `Select * from users where id = $1`;
+        const value = [id];
+
+        const result = await client.query(querystring, value);
+        if (result.rows.length === 0) {
+            throw new AppError('their is no employee with this  id', 403);
+        }
+
+        const createOrgSQL = `UPDATE users SET firstname=$1 ,lastname=$2 ,email=$3 ,phone_number=$4  WHERE id=$5`;
+        const queryValue = [firstname, lastname, email,phone_number, id]
+        const user = await client.query(createOrgSQL,queryValue);
+       
+        await client.release()
+
+        return user;
+    }
+
+    static async getOneEmployee(email){
+        const client = await pool.connect();
+
+        
+        const querystring = `Select * from users where email = $1`;
+        const value = [email];
+
+        const result = await client.query(querystring, value);
+        
+        if (result.rows.length === 0) {
+            throw new AppError(`their is no employee with this  ${email}`, 403);
+        }
+
+        await client.release()
+
+        return result.rows;
+    }
+
+    static async getAllEmployee(){
+
+        const client = await pool.connect();
+
+        
+        const querystring = `Select * from users`;
+
+        const result = await client.query(querystring);
+        await client.release()
+
+        return result.rows;
+    }
+
+    static async deleteEmployee(id){
+
+        const client = await pool.connect();
+
+        
+        const selectstring = `Select * from users where id = $1`;
+        const value = [id];
+
+        const employee = await client.query(selectstring, value);
+        console.log(employee.rows)
+        if (employee.rows.length === 0) {
+            throw new AppError(`their is no employee with this  ${id}`, 403);
+        }
+        
+        const querystring = `DELETE from users WHERE id=${id}`;
+
+        const result = await client.query(querystring);
+        await client.release()
+
+        return result;
+    }
+
 }
 
 

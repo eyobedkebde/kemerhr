@@ -1,10 +1,5 @@
 
-const {loginService, resgisterOrgService,createTeamService,
-    addEmployeeStatusService, addEmployeeAddressService, 
-    setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService, 
-    createInternalNoticeService,getAllNoties,
-    removeNoticeService,getAllFeedbacks, removeFeedbacksService} = require('../services/organization')
-
+const {loginService, resgisterOrgService,createTeamService,addEmployeeStatusService, addEmployeeAddressService, setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService  } = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -143,11 +138,16 @@ module.exports.addEmployeeStatus = async(req, res, next)=>{
     }
 }
 
+// getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService 
+
 module.exports.updateEmployee = async(req, res, next)=>{
     try{
+        const {firstname,lastname,email,phone_number} = req.body;
         
+        await updateEmployeeService(req.params.id, firstname,lastname,email,phone_number)
         res.json({
-            message:`new Organization Created successfully!`,
+            success : "True",
+            message:`employee updated successfully with the name of ${req.tenantId}!`,
         });
         
     }catch(err){
@@ -158,9 +158,10 @@ module.exports.updateEmployee = async(req, res, next)=>{
 
 module.exports.getOneEmployee = async(req, res, next)=>{
     try{
-        
+        const result = await getOneEmployeeService(req.params.email);
         res.json({
-            message:`new Organization Created successfully!`,
+            data : result,
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
         });
         
     }catch(err){
@@ -172,22 +173,24 @@ module.exports.getOneEmployee = async(req, res, next)=>{
 
 module.exports.getEmployees = async(req, res, next)=>{
     try{
-        
+        const result = await getEmployeesService()
+
         res.json({
-            message:`new Organization Created successfully!`,
+            data : result,
+            message:`success`,
         });
         
     }catch(err){
-        next(err)
+        next(err);
     }
 }
 
 
 module.exports.deleteEmployee = async(req, res, next)=>{
     try{
-        
+        await deleteEmployeeService(req.params.id)
         res.json({
-            message:`new Organization Created successfully!`,
+            message:`employee deleted successfully with the id of ${req.params.id}!`,
         });
         
     }catch(err){

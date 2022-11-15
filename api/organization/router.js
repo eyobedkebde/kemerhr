@@ -19,6 +19,7 @@ const fileUpload = require('../../utils/uploadFile');
 const router= Router();
 
 
+const { AppError } = require('../../utils/ErrorHandler');
 router.post('/login',login);
 
 router.post('/register', registerOrganization);
@@ -39,7 +40,7 @@ router.post('/createTeam', isolate, createTeam)
 
 
 router.get('/getEmployees', isolate, getEmployees)
-router.get('/getOneEmployee', isolate, getOneEmployee)
+router.get('/getOneEmployee/:email', isolate, getOneEmployee)
 router.put('/updateEmployee/:id',isolate, updateEmployee)
 router.delete('/deleteEmployee/:id', isolate, deleteEmployee)
 
