@@ -30,13 +30,7 @@ class Organization{
     static async register(name, email,password, phoneNumber) {
         
         const client = await pool.connect();
-
-        await client.query(`CREATE TABLE organization (id UUID PRIMARY KEY DEFAULT 
-            gen_random_uuid(), name character varying(100) NOT NULL,
-             email character varying(100) NOT NULL, phonenumber character varying(100)
-              NOT NULL, password TEXT NOT NULL,status character varying(100) NOT NULL,
-              createdat date NOT NULL, UNIQUE(email), UNIQUE(name));`);
-
+        console.log( name, email, phoneNumber, newPass,'InActive', new Date())
         const querystring = `Select * from organization where email = $1`;
         const value = [email];
 
@@ -161,9 +155,15 @@ class Organization{
         if (result.rows.length !== 0) {
             throw new AppError('You already have created employee with this account please login', 403);
         }
+        
         const newPass = await bcrypt.hash(password, 10);
 
-        const createOrgSQL = format('INSERT INTO users (firstname,lastname,email,phone_number,gender,birthdate,img, imgpub,role, teamid, password, createdat, passwordchangedat) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)', firstname,lastname,email,phone_number,gender,birthdate,pictureURL,picturePublic, role, teamid, newPass, new Date(), new Date());
+        const createOrgSQL = format(`INSERT INTO users 
+        (firstname,lastname,email,phone_number,gender,birthdate,img, 
+            imgpub,role, teamid, password, createdat, passwordchangedat) 
+            VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)`, 
+            firstname,lastname,email,phone_number,gender,birthdate,pictureURL,
+            picturePublic, role, teamid, newPass, new Date(), new Date());
 
         const users = await client.query(createOrgSQL);
        
@@ -185,12 +185,9 @@ class Organization{
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
         }
-        
-        if (result.rows.length === 0) {
-            throw new AppError('Please create a user account for the data be inserted', 403);
-        }
 
-        const createOrgSQL = format('INSERT INTO user_address (empid, country, city, subcity, wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)', empid, country, city, subcity, wereda, housenumber, new Date());
+        const createOrgSQL = format(`INSERT INTO user_address (empid, country, city, subcity,
+             wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)`, empid, country, city, subcity, wereda, housenumber, new Date());
 
         const users_addres = await client.query(createOrgSQL);
        

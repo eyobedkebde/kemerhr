@@ -18,11 +18,6 @@ const fileUpload = require('../../utils/uploadFile');
 
 const router= Router();
 
-router.post('/addEmployeeData', isolate, 
-// allowedFileTypes('jpeg', 'jpg', 'png'), 
-//         fileUpload.single('photo'),
-         addEmployeeData);
-
 router.post('/login',login);
 
 router.post('/register', registerOrganization);
@@ -55,5 +50,8 @@ router.route('/feedback').
         get(isolate, getFeedbacks).
         delete(isolate, removeFeedbacks);
 
-
+router.post('/addEmployeeData', isolate, 
+        // allowedFileTypes('jpeg', 'jpg', 'png'), 
+        //         fileUpload.single('photo'),
+addEmployeeData);
 module.exports= router;

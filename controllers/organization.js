@@ -79,11 +79,10 @@ module.exports.createTeam = async (req, res, next) => {
 
 
 module.exports.addEmployeeData = async (req, res, next) => {
-    console.log("req.file")
 
     try {
         const { firstname, lastname, email, phone_number, gender, birthdate, role, teamid, password } = req.body;
-        console.log(req.file)
+        // console.log(req.file)
         // if (!req.file) {
         //     return next(new AppError("no file uploaded, please employee image", 400));
         // }
