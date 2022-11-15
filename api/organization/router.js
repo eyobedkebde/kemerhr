@@ -5,11 +5,15 @@ const {createSchema, createUsandTeam,
         createComplandTeam,createEmpStatandUpdate, 
         createInterandFeed} = require('../middlewares/create');
 
-const {login, registerOrganization,createOrg, 
-        createInternalNotice, getallNotices,removeNotice,
-        getFeedbacks, removeFeedbacks} = require('../../controllers/organization')
+const {login, registerOrganization,createOrg,
+        updateEmployee, getEmployees, getOneEmployee, deleteEmployee,
+        addEmployeeData, addEmployeeStatus, addEmployeeAddress,
+        addEmployeeMaritalStatus,createTeam,createInternalNotice, 
+        getallNotices,removeNotice,getFeedbacks, removeFeedbacks
+        } = require('../../controllers/organization');
 
 const router= Router();
+
 
 router.post('/login',login);
 
@@ -21,6 +25,19 @@ router.post('/createorg', isolate,
         createInterandFeed, createOrg
 );
 
+router.post('/addEmployeeData', isolate, addEmployeeData)
+router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
+router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
+router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
+router.post('/createTeam', isolate, createTeam)
+
+
+router.get('/getEmployees', isolate, getEmployees)
+router.get('/getOneEmployee', isolate, getOneEmployee)
+router.put('/updateEmployee/:id',isolate, updateEmployee)
+router.delete('/deleteEmployee/:id', isolate, deleteEmployee)
+
+
 router.route('/internalnotice').
         post(isolate, createInternalNotice).
         get(isolate, getallNotices).
@@ -29,5 +46,6 @@ router.route('/internalnotice').
 router.route('/feedback').
         get(isolate, getFeedbacks).
         delete(isolate, removeFeedbacks);
+
 
 module.exports= router;

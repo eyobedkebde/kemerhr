@@ -18,6 +18,102 @@ module.exports.setOrganizationCreated = async(tenantId)=>{
     await organizationDAL.actvateOrg(tenantId)
 }
 
+module.exports.createTeamService = async (team_name,status)=>{
+    return await organizationDAL.createTeam(team_name,status);
+}
+
+
+module.exports.addEmployeeDataService = async (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password)=>{
+    
+    return await organizationDAL.addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password);
+}
+
+
+module.exports.addEmployeeAddressService = async (empid, country, city, subcity, wereda, housenumber)=>{
+    return await organizationDAL.addEmployeeAddress(empid, country, city, subcity, wereda, housenumber)
+}
+
+
+module.exports.addEmployeeMaritalStatusService = async (status, userid, numberofchildren)=>{
+    return await organizationDAL.addEmployeeMaritalStatus(status, userid, numberofchildren)
+}
+
+
+
+module.exports.addEmployeeStatusService = async(userid,yearlyrest,probation,numberofprobation,status)=>{
+    return await organizationDAL.addEmployeeStatus(userid,yearlyrest,probation,numberofprobation,status);
+}
+
+
+module.exports.updateEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.getOneEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+
+module.exports.getEmployees = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.deleteEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+
+module.exports.createTeam = async(req, res, next)=>{
+    try{
+        
+        
+        res.json({
+            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+        });
+        
+
+    }catch(err){
+        next(err)
+    }
+}
+
+
 module.exports.createInternalNoticeService = async({ content, title, postby })=>{
     await organizationDAL.createaNotice( content, title, postby)
 }

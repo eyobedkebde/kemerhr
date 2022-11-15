@@ -1,7 +1,10 @@
 
-const {loginService, resgisterOrgService, 
-    setOrganizationCreated, createInternalNoticeService,getAllNoties,
+const {loginService, resgisterOrgService,createTeamService,
+    addEmployeeStatusService, addEmployeeAddressService, 
+    setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService, 
+    createInternalNoticeService,getAllNoties,
     removeNoticeService,getAllFeedbacks, removeFeedbacksService} = require('../services/organization')
+
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -49,6 +52,7 @@ module.exports.registerOrganization = async(req, res, next) =>{
 module.exports.createOrg = async(req, res, next)=>{
     try{
         await setOrganizationCreated(req.tenantId);
+
         res.json({
             message:`new Organization Created successfully with the name of ${req.tenantId}!`,
         });
@@ -57,6 +61,139 @@ module.exports.createOrg = async(req, res, next)=>{
         next(err)
     }
 }
+
+module.exports.createTeam = async(req, res, next)=>{
+    
+    try{
+        const {team_name,status } = req.body;
+        const result  = await createTeamService(team_name,status)
+
+        res.json({
+            data: result.rows,
+            
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.addEmployeeData = async(req, res, next)=>{
+    try{
+        const {firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password} = req.body;
+        
+        await addEmployeeDataService(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password)
+        
+        res.json({
+            message:`new employee Created successfully`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.addEmployeeAddress = async(req, res, next)=>{
+    
+    try{
+        const {empid, country, city, subcity,wereda ,housenumber } = req.body;
+
+        await addEmployeeAddressService(empid, country, city, subcity, wereda, housenumber)
+
+        res.json({
+            message:`new employee address Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.addEmployeeMaritalStatus = async(req, res, next)=>{
+    try{
+
+        const {status, userid, numberofchildren } = req.body;
+        await addEmployeeMaritalStatusService(status, userid, numberofchildren)
+        
+        res.json({
+            message:`new employee marital status Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.addEmployeeStatus = async(req, res, next)=>{
+    try{
+
+        const {userid,yearlyrest,probation,numberofprobation,status} = req.body;
+        await addEmployeeStatusService(userid,yearlyrest,probation,numberofprobation,status);
+
+        res.json({
+            message:`status added successfuly!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.updateEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.getOneEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+
+module.exports.getEmployees = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.deleteEmployee = async(req, res, next)=>{
+    try{
+        
+        res.json({
+            message:`new Organization Created successfully!`,
+        });
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+
+
 
 module.exports.createInternalNotice = async (req, res, next) => {
     try {
