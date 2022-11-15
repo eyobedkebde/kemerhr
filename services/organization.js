@@ -30,9 +30,10 @@ module.exports.addEmployeeDataService = async (file, firstname,lastname,email,ph
     await cloudinary.uploader
     .upload(file.path, { folder: "kemerhr/user" })
     .then((result) => {
+        console.log(result)
       pictureURL = result.secure_url;
       picturePublic = result.public_id;
-    });
+    }).finally((result)=>console.log(result));
 
     return await organizationDAL.addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password);
 }

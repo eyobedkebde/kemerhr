@@ -18,6 +18,9 @@ const fileUpload = require('../../utils/uploadFile');
 
 const router= Router();
 
+router.post('/addEmployeeData', isolate, 
+allowedFileTypes('jpeg', 'jpg', 'png'), 
+        fileUpload.single('photo'), addEmployeeData);
 
 router.post('/login',login);
 
@@ -29,9 +32,6 @@ router.post('/createorg', isolate,
         createInterandFeed, createOrg
 );
 
-router.post('/addEmployeeData', isolate, 
-        allowedFileTypes('jpeg', 'jpg', 'png'), 
-        fileUpload.single('photo'), addEmployeeData);
 
 router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)

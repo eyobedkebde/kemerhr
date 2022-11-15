@@ -61,11 +61,10 @@ module.exports.createTeam = async(req, res, next)=>{
     
     try{
         const {team_name,status } = req.body;
-        const result  = await createTeamService(team_name,status)
+        await createTeamService(team_name,status)
 
         res.json({
-            data: result.rows,
-            
+            data: `${team_name} successfuly created!`
         });
         
     }catch(err){
@@ -75,19 +74,22 @@ module.exports.createTeam = async(req, res, next)=>{
 
 
 module.exports.addEmployeeData = async(req, res, next)=>{
+    console.log("req.file")
+
     try{
         const {firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password} = req.body;
-        
+        console.log(req.file)
         if (!req.file) {
             return next(new AppError("no file uploaded, please employee image", 400));
         }
-        await addEmployeeDataService(firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password)
+        await addEmployeeDataService(file, firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password)
         
         res.json({
             message:`new employee Created successfully`,
         });
         
     }catch(err){
+        console.log(err)
         next(err)
     }
 }

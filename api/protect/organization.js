@@ -36,10 +36,6 @@ exports.isolate = async (req, res, next) => {
           await pool.query(sql);
         }
         
-        if(user.rows[0].status === 'Active'){
-          const sql = `SET search_path TO ${compData.id}, public`;
-          await pool.query(sql);
-        }
         
         req.tenantId = compData.id;
         next();

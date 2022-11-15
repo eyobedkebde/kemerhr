@@ -137,7 +137,7 @@ class Organization{
         const result = await client.query(querystring, value);
 
         if (result.rows.length !== 0) {
-            throw new AppError(`new team Created successfully with the name of ${team_name}!`, 403);
+            throw new AppError(`${team_name} already exists!`, 403);
         }
 
         const createOrgSQL = format('INSERT INTO team (team_name, status, createdat) VALUES (%L, %L, %L)', team_name,status, new Date());
@@ -184,6 +184,10 @@ class Organization{
 
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
+        }
+        
+        if (result.rows.length === 0) {
+            throw new AppError('Please create a user account for the data be inserted', 403);
         }
 
         const createOrgSQL = format('INSERT INTO user_address (empid, country, city, subcity, wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)', empid, country, city, subcity, wereda, housenumber, new Date());
