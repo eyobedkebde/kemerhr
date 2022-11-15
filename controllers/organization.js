@@ -1,5 +1,4 @@
 
-const { getAllEmployee } = require('../DAL/organization');
 const {loginService, resgisterOrgService,createTeamService,addEmployeeStatusService, addEmployeeAddressService, setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService  } = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
@@ -48,6 +47,7 @@ module.exports.registerOrganization = async(req, res, next) =>{
 module.exports.createOrg = async(req, res, next)=>{
     try{
         await setOrganizationCreated(req.tenantId);
+
         res.json({
             message:`new Organization Created successfully with the name of ${req.tenantId}!`,
         });
@@ -93,11 +93,11 @@ module.exports.addEmployeeAddress = async(req, res, next)=>{
     
     try{
         const {empid, country, city, subcity,wereda ,housenumber } = req.body;
-        console.log(empid, country, city, subcity,wereda ,housenumber )
+
         await addEmployeeAddressService(empid, country, city, subcity, wereda, housenumber)
 
         res.json({
-            message:`new employee address Created successfully with the name of ${req.tenantId}!`,
+            message:`new employee address Created successfully!`,
         });
         
     }catch(err){
@@ -112,7 +112,7 @@ module.exports.addEmployeeMaritalStatus = async(req, res, next)=>{
         await addEmployeeMaritalStatusService(status, userid, numberofchildren)
         
         res.json({
-            message:`new employee marital status Created successfully with the name of ${req.tenantId}!`,
+            message:`new employee marital status Created successfully!`,
         });
         
     }catch(err){
@@ -127,7 +127,7 @@ module.exports.addEmployeeStatus = async(req, res, next)=>{
         await addEmployeeStatusService(userid,yearlyrest,probation,numberofprobation,status);
 
         res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
+            message:`status added successfuly!`,
         });
         
     }catch(err){
@@ -196,3 +196,71 @@ module.exports.deleteEmployee = async(req, res, next)=>{
 }
 
 
+
+
+module.exports.createInternalNotice = async (req, res, next) => {
+    try {
+        const { content, title, postby } = req.body;
+
+        if( !content || !title || !postby){
+            throw new AppError("Field can't be empty", 403);
+        }
+
+        await createInternalNoticeService(req.body);
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.getallNotices = async (req, res, next) => {
+    try {
+        const allNotice = await getAllNoties();
+
+        res.json({
+            message:"All noticess on the platform",
+            user: allNotice.rows
+
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.removeNotice = async (req, res, next) => {
+    try {
+        const { noticeId } = req.body;
+        await removeNoticeService(noticeId);
+
+        res.json({
+            message:"Selected notice deleted successfuly!",
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.getFeedbacks = async (req, res, next) => {
+    try {
+        const allFeedbacks = await getAllFeedbacks();
+
+        res.json({
+            message:"Selected notice deleted successfuly!",
+            data: allFeedbacks
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.removeFeedbacks = async (req, res, next) => {
+    try {
+        await removeFeedbacksService(req.body.feedbackId);
+
+        res.json({
+            message:"Selected feedback deleted successfuly!",
+        })
+    } catch (err) {
+        next(err)
+    }
+}

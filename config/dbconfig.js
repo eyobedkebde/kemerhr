@@ -7,11 +7,11 @@ const config = {
    // PORT: process.env.PORT,
    // password: process.env.PASSWORD.toString(),
    // database: process.env.DATABASE
-   user: 'postgres',
-   password: process.env.password.toString(),
+   user: 'eyobed',
+   password: null,
    host: 'localhost',
    port: 5432,
-   database: 'kemerhrthree'
+   database: 'kemerhr'
 }
 
 const pool = new Pool(config);

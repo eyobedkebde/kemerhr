@@ -66,7 +66,6 @@ class Create{
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
-            console.log(err)
 
         }
     }
@@ -74,7 +73,6 @@ class Create{
     static async createComplainndEmpAddress(){
 
         const client = await pool.connect();
-        console.log("three")
 
         try{
             
@@ -105,7 +103,6 @@ class Create{
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
-            console.log(err)
 
         }
     }
@@ -113,8 +110,6 @@ class Create{
     static async createEmpStatusAndEmpMartia(){
 
         const client = await pool.connect();
-        console.log("four")
-
         try{
             const createEmpMartialQuery = {
                 // give the query a unique name
@@ -144,7 +139,6 @@ class Create{
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
-            console.log(err)
 
         }
     }
@@ -152,7 +146,6 @@ class Create{
     static async createInternalNotiAndFeedback(){
 
         const client = await pool.connect();
-        console.log("five")
 
         try{
             const createFeedbackQuery = {
@@ -179,7 +172,6 @@ class Create{
 
             await client.release();
     }catch(err){
-        console.log(err)
         await client.query(`ROLLBACK`);
         await client.release();
     }

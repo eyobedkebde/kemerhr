@@ -59,8 +59,7 @@ class Organization{
 
     static async actvateOrg(tenantId) {
       const client = await pool.connect();
-        console.log('six')
-        try{
+      
             await client.query(`set search_path to public;`);
 
             const createOrgSQL = format("UPDATE organization SET status = 'Active' WHERE name= %L", tenantId);
@@ -74,10 +73,59 @@ class Organization{
             // console.log(b)
             await client.release();
 
-    }catch(err){
-        console.log(err)
+    }
+    
+    static async createaNotice(content, title, postby) {
+      const client = await pool.connect();
+
+            //REMEMBER TO REMOVE THE THE NUMBER OF READ AND READ FIELD
+            //OR TRY TO POST THE INTERNAL NOTICE BASED ON TRIGGERED DELETE
+            const createNoticeSQL = format("INSERT INTO internalnotice(title, content, postedby, createdAt) VALUES(%L, %L, %L, %L)", title, content, postby, new Date());
+
+            await client.query(createNoticeSQL);
+
+            await client.release();
 
     }
+    
+    static async getcreatedNoices() {
+      const client = await pool.connect();
+
+            //REMEMBER TO REMOVE THE THE NUMBER OF READ AND READ FIELD
+            //OR TRY TO POST THE INTERNAL NOTICE BASED ON TRIGGERED DELETE
+
+            const noticess = await client.query("Select * from internalnotice;",);
+
+            await client.release();
+
+            return noticess;
+
+    }
+
+    static async removeExistingNotice(noticeId) {
+        const client = await pool.connect();
+
+        const noticeSQL = format('DELETE FROM internalnotice WHERE id= %L', noticeId)
+        await client.query(noticeSQL);
+
+        await client.release();
+    }
+
+    static async getFeedbacks() {
+        const client = await pool.connect();
+        const feedbacks = await client.query("SELECT * FROM feedback;");
+
+        await client.release();
+        return feedbacks.rows
+    }
+    
+    static async removeFeedback(feedbackId) {
+        const client = await pool.connect();
+        const feedbackSQL = format('DELETE FROM feedback WHERE id= %L', feedbackId)
+
+        await client.query(feedbackSQL);
+
+        await client.release();
     }
 
     static async createTeam(team_name,status) {
@@ -104,21 +152,16 @@ class Organization{
     }
     static async addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password) {
         const client = await pool.connect();
-
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
         
         const querystring = `Select * from users where email = $1`;
         const value = [email];
 
         const result = await client.query(querystring, value);
 
-        console.log(result.rows)
         if (result.rows.length !== 0) {
             throw new AppError('You already have created employee with this account please login', 403);
         }
         const newPass = await bcrypt.hash(password, 10);
-        console.log(newPass)
 
         const createOrgSQL = format('INSERT INTO users (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password, createdat, passwordchangedat) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)', firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, newPass, new Date(), new Date());
 
@@ -138,7 +181,7 @@ class Organization{
         const value = [empid];
 
         const result = await client.query(querystring, value);
-        console.log(result.rows)
+
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
         }
@@ -176,8 +219,15 @@ class Organization{
 
     static async addEmployeeStatus(userid,yearlyrest,probation,numberofprobation,status){
         const client = await pool.connect();
+                
+        const querystring = `Select * from user_status where userid = $1`;
+        const value = [userid];
 
-        
+        const result = await client.query(querystring, value);
+
+        if (result.rows.length !== 0) {
+            throw new AppError('You already have created  user status info with this employee', 403);
+        }
 
         const createOrgSQL = format('INSERT INTO user_status (userid,yearlyrest,probation,numberofprobation,status, createdat) VALUES (%L, %L,%L, %L, %L, %L)', userid,yearlyrest,probation,numberofprobation,status, new Date());
 
