@@ -1,5 +1,7 @@
 
-const {loginService, resgisterOrgService, setOrganizationCreated} = require('../services/organization')
+const {loginService, resgisterOrgService, 
+    setOrganizationCreated, createInternalNoticeService,getAllNoties,
+    removeNoticeService,getAllFeedbacks, removeFeedbacksService} = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -52,6 +54,73 @@ module.exports.createOrg = async(req, res, next)=>{
         });
         
     }catch(err){
+        next(err)
+    }
+}
+
+module.exports.createInternalNotice = async (req, res, next) => {
+    try {
+        const { content, title, postby } = req.body;
+
+        if( !content || !title || !postby){
+            throw new AppError("Field can't be empty", 403);
+        }
+
+        await createInternalNoticeService(req.body);
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.getallNotices = async (req, res, next) => {
+    try {
+        const allNotice = await getAllNoties();
+
+        res.json({
+            message:"All noticess on the platform",
+            user: allNotice.rows
+
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.removeNotice = async (req, res, next) => {
+    try {
+        const { noticeId } = req.body;
+        await removeNoticeService(noticeId);
+
+        res.json({
+            message:"Selected notice deleted successfuly!",
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.getFeedbacks = async (req, res, next) => {
+    try {
+        const allFeedbacks = await getAllFeedbacks();
+
+        res.json({
+            message:"Selected notice deleted successfuly!",
+            data: allFeedbacks
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports.removeFeedbacks = async (req, res, next) => {
+    try {
+        await removeFeedbacksService(req.body.feedbackId);
+
+        res.json({
+            message:"Selected feedback deleted successfuly!",
+        })
+    } catch (err) {
         next(err)
     }
 }
