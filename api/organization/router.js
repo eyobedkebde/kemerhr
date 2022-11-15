@@ -19,7 +19,6 @@ const fileUpload = require('../../utils/uploadFile');
 const router= Router();
 
 
-const { AppError } = require('../../utils/ErrorHandler');
 router.post('/login',login);
 
 router.post('/register', registerOrganization);
@@ -32,7 +31,8 @@ router.post('/createorg', isolate,
 
 router.post('/addEmployeeData', isolate, 
         allowedFileTypes('jpeg', 'jpg', 'png'), 
-        fileUpload.single('photo'), addEmployeeData)
+        fileUpload.single('photo'), addEmployeeData);
+
 router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
