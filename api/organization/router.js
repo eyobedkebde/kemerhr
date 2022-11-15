@@ -11,6 +11,7 @@ const { route } = require('../../loaders/app');
 const pool =require('../../config/dbconfig');
 
 const { AppError } = require('../../utils/ErrorHandler');
+const { deleteEmployeeService } = require('../../services/organization');
 router.post('/login',login);
 
 router.post('/register', registerOrganization);
@@ -46,7 +47,7 @@ router.post('/createTeam', isolate, createTeam)
 
 
 router.get('/getEmployees', isolate, getEmployees)
-router.get('/getOneEmployee', isolate, getOneEmployee)
+router.get('/getOneEmployee/:email', isolate, getOneEmployee)
 router.put('/updateEmployee/:id',isolate, updateEmployee)
 router.delete('/deleteEmployee/:id', isolate, deleteEmployee)
 

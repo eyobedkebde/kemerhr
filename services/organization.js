@@ -45,70 +45,23 @@ module.exports.addEmployeeStatusService = async(userid,yearlyrest,probation,numb
 }
 
 
-module.exports.updateEmployee = async(req, res, next)=>{
-    try{
-        
-        res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
-        });
-        
-    }catch(err){
-        next(err)
-    }
+module.exports.updateEmployeeService = async(id, firstname,lastname,email,phone_number)=>{
+    return await organizationDAL.updateEmployee(id, firstname,lastname,email,phone_number)
 }
 
 
-module.exports.getOneEmployee = async(req, res, next)=>{
-    try{
-        
-        res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
-        });
-        
-    }catch(err){
-        next(err)
-    }
+module.exports.getOneEmployeeService = async(email)=>{
+    return await organizationDAL.getOneEmployee(email)
 }
 
 
 
-module.exports.getEmployees = async(req, res, next)=>{
-    try{
-        
-        res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
-        });
-        
-    }catch(err){
-        next(err)
-    }
+module.exports.getEmployeesService = async()=>{
+    return await organizationDAL.getAllEmployee();
 }
 
 
-module.exports.deleteEmployee = async(req, res, next)=>{
-    try{
-        
-        res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
-        });
-        
-    }catch(err){
-        next(err)
-    }
-}
-
-
-
-module.exports.createTeam = async(req, res, next)=>{
-    try{
-        
-        
-        res.json({
-            message:`new Organization Created successfully with the name of ${req.tenantId}!`,
-        });
-        
-    }catch(err){
-        next(err)
-    }
+module.exports.deleteEmployeeService = async(id)=>{
+    return await organizationDAL.deleteEmployee(id)
 }
 
