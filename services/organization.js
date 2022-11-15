@@ -2,6 +2,7 @@
 const organizationDAL = require('../DAL/organization');
 const {createToken} = require('../utils/createJwt');
 const {AppError} = require('../utils/ErrorHandler')
+const cloudinary = require('../utils/cloudinary');
 
 module.exports.loginService = async(email, password)=>{
     const result = await organizationDAL.login(email, password);
@@ -23,9 +24,18 @@ module.exports.createTeamService = async (team_name,status)=>{
 }
 
 
-module.exports.addEmployeeDataService = async (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password)=>{
-    
-    return await organizationDAL.addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password);
+module.exports.addEmployeeDataService = async (firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password)=>{//file, 
+    // var pictureURL, picturePublic;
+
+    // await cloudinary.uploader
+    // .upload(file.path, { folder: "kemerhr/user" })
+    // .then((result) => {
+    //     console.log(result)
+    //   pictureURL = result.secure_url;
+    //   picturePublic = result.public_id;
+    // }).finally((result)=>console.log(result));
+    return await organizationDAL.addEmployeeData( "pictureURL", "picturePublic",
+    firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password);
 }
 
 
@@ -55,12 +65,19 @@ module.exports.getOneEmployeeService = async(email)=>{
 }
 
 
-
+/**
+ * get all employees
+ * @returns Promise
+ */
 module.exports.getEmployeesService = async()=>{
     return await organizationDAL.getAllEmployee();
 }
 
-
+/**
+ * deletes the user from database
+ * @param {string} id -user id
+ * @returns 
+ */
 module.exports.deleteEmployeeService = async(id)=>{
     return await organizationDAL.deleteEmployee(id)
 }

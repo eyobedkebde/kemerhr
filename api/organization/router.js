@@ -12,8 +12,11 @@ const {login, registerOrganization,createOrg,
         getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword
         } = require('../../controllers/organization');
 
-const router= Router();
+const allowedFileTypes = require('../../utils/fileFilters')
 
+const fileUpload = require('../../utils/uploadFile');
+
+const router= Router();
 
 const { AppError } = require('../../utils/ErrorHandler');
 
@@ -31,7 +34,7 @@ router.post('/createorg', isolate,
         createInterandFeed, createOrg
 );
 
-router.post('/addEmployeeData', isolate, addEmployeeData)
+
 router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
@@ -53,5 +56,8 @@ router.route('/feedback').
         get(isolate, getFeedbacks).
         delete(isolate, removeFeedbacks);
 
-
+router.post('/addEmployeeData', isolate, 
+        // allowedFileTypes('jpeg', 'jpg', 'png'), 
+        //         fileUpload.single('photo'),
+addEmployeeData);
 module.exports= router;

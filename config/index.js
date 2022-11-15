@@ -5,6 +5,11 @@ const config = {
     connectionString : process.env.DATABASE_URL,
     secretkey: process.env.SECRET_KEY,
     expiresIn: process.env.EXPIRESIN,
-    env: "Development"
+    env: "Development",
+    cloudinary: {
+        cloud_name: process.env.CLOUD_NAME,
+        cl_apiKey: process.env.CLOUD_API_KEY,
+        cl_apiSecret: process.env.CLOUD_API_SECRET
+    }
 }
 module.exports = config;
