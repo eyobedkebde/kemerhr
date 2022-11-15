@@ -6,7 +6,7 @@ const router= Router();
 
 
 const {login, complain, feedback, deleteComplain,
-    getMycomplains} = require('../../controllers/employee')
+    getMycomplains, forgotPassword, resetPassword} = require('../../controllers/employee')
 
 router.post('/login',login);
 
@@ -16,6 +16,11 @@ router.route('/complain').
     delete(isolateOrgAndUser, deleteComplain)
 
 router.route('/feedback').post(isolateOrgAndUser, feedback);
+
+router.post('/forgotPassword', forgotPassword);
+router.put('/resetpassword/:resettoken', resetPassword);
+
+
 
 module.exports= router;
 

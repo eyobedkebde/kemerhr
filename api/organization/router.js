@@ -9,13 +9,18 @@ const {login, registerOrganization,createOrg,
         updateEmployee, getEmployees, getOneEmployee, deleteEmployee,
         addEmployeeData, addEmployeeStatus, addEmployeeAddress,
         addEmployeeMaritalStatus,createTeam,createInternalNotice, 
-        getallNotices,removeNotice,getFeedbacks, removeFeedbacks
+        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword
         } = require('../../controllers/organization');
 
 const router= Router();
 
 
 const { AppError } = require('../../utils/ErrorHandler');
+
+router.post('/forgotPassword', forgotPassword);
+router.put('/resetpassword/:resettoken', resetPassword);
+
+
 router.post('/login',login);
 
 router.post('/register', registerOrganization);

@@ -51,7 +51,7 @@ class Create{
                 text: `CREATE TABLE users ( id SERIAL, firstname character varying(100) NOT NULL,lastname character varying(100) NOT NULL,
                     email character varying(100) NOT NULL,phone_number integer NOT NULL,gender character(8) NOT NULL,birthdate date NOT NULL,
                     img text NOT NULL, role character varying(100) NOT NULL, teamid integer NOT NULL, password text NOT NULL,
-                    passwordchangedat timestamp with time zone NOT NULL,createdat timestamp with time zone NOT NULL,PRIMARY KEY(id),  
+                    passwordchangedat timestamp with time zone NOT NULL,createdat timestamp with time zone NOT NULL,resetPasswordToken character varying(100), resetPasswordExpire character varying(100) ,PRIMARY KEY(id),  
                     CONSTRAINT team_id FOREIGN KEY(teamid) REFERENCES team(id) ON DELETE CASCADE
                 );`
             }

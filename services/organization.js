@@ -87,3 +87,13 @@ module.exports.getAllFeedbacks = async()=>{
 module.exports.removeFeedbacksService = async(feedbackId)=>{
    await organizationDAL.removeFeedback(feedbackId);
 }
+
+
+module.exports.forgotPasswordService = async(email)=>{   
+    return await organizationDAL.forgotPassword(email);
+}
+
+
+module.exports.resetPasswordService = async(email, resettoken, password )=>{   
+    return await organizationDAL.resetPassword(email, resettoken, password );
+}

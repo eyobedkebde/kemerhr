@@ -2,6 +2,8 @@ const pool =require('../config/dbconfig')
 const bcrypt = require('bcryptjs');
 const {AppError} = require('../utils/ErrorHandler');
 const format = require('pg-format');
+const crypto = require('crypto')
+
 
 class Employee{
 
@@ -97,6 +99,76 @@ class Employee{
         await client.release()
         
     }
+
+    static async forgotPassword(email, organization_name){
+
+        const client = await pool.connect();
+        const sql = `SET search_path TO ${organization_name}, public`;
+        await client.query(sql);
+
+        
+        
+        const querystring = `Select * from users where email = $1`;
+        const value = [email];
+
+        const result = await client.query(querystring, value);
+        if (result.rows.length === 0) {
+            throw new AppError('their is no employee with this  email', 403);
+        }
+
+     
+        // Generate token
+        const resetToken = crypto.randomBytes(20).toString('hex');
+        
+        // Hash token and set to resetPasswordToken field
+        const resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex');
+            
+        // Set expire
+        const resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+        const createOrgSQL = `UPDATE users SET resetPasswordToken=$1 ,resetPasswordExpire=$2 WHERE email=$3`;
+        const queryValue = [resetPasswordToken, resetPasswordExpire, email]
+        await client.query(createOrgSQL,queryValue);
+       
+        return resetToken;
+
+    }
+
+    static async resetPassword(email, resettoken, password, organization_name){
+
+        const client = await pool.connect();
+        const sql = `SET search_path TO ${organization_name}, public`;
+        await client.query(sql);
+
+        // Get hashed token
+        const resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(resettoken)
+        .digest('hex');
+
+        const newPass = await bcrypt.hash(password, 10);
+        
+        const querystring = `Select * from users where resetPasswordToken = $1 AND  resetPasswordExpire > $2`;
+        const value = [resetPasswordToken, Date.now()];
+
+        const result = await client.query(querystring, value);
+        console.log(Date.now())
+        if (result.rows.length === 0) {
+            throw new AppError('Invalid token', 400);
+        }
+
+        const createOrgSQL = `UPDATE users SET resetPasswordToken=$1 ,resetPasswordExpire=$2, password=$3 WHERE email=$4`;
+        const queryValue = [null, null, newPass, email]
+        await client.query(createOrgSQL,queryValue);
+
+        await client.release()       
+
+        return true        
+    }
+
+
 }
 
 

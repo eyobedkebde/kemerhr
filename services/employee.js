@@ -24,3 +24,13 @@ module.exports.getOneComplainService = async(complainId)=>{
     const complains = await employeeDAL.getOneComplain(complainId);
     return complains;
 }
+
+
+module.exports.forgotPasswordService = async(email,organization_name)=>{   
+    return await employeeDAL.forgotPassword(email, organization_name);
+}
+
+
+module.exports.resetPasswordService = async(email, resettoken, password,  organization_name )=>{   
+    return await employeeDAL.resetPassword(email, resettoken, password,organization_name );
+}

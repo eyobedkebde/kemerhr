@@ -1,5 +1,5 @@
 
-const {loginService, resgisterOrgService,createTeamService,addEmployeeStatusService, addEmployeeAddressService, setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService  } = require('../services/organization')
+const {forgotPasswordService,loginService, resgisterOrgService,removeFeedbacksService,createTeamService,addEmployeeStatusService, addEmployeeAddressService, setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService, resetPasswordService  } = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -75,6 +75,7 @@ module.exports.createTeam = async(req, res, next)=>{
 
 
 module.exports.addEmployeeData = async(req, res, next)=>{
+    console.log(req.body)
     try{
         const {firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password} = req.body;
         
@@ -264,3 +265,47 @@ module.exports.removeFeedbacks = async (req, res, next) => {
         next(err)
     }
 }
+
+
+module.exports.forgotPassword = async (req, res, next) => {
+
+    try {
+        
+            const {email} = req.body;
+
+            console.log(email)
+            const result = await forgotPasswordService(email)
+        
+            // Create reset url
+            const resetUrl = `${req.protocol}://${req.get(
+            'host',
+            )}/api/v1/organization/resetpassword/${result}`;
+        
+            // const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+            return res.status(200).json({
+                // message
+                result
+            })
+                    
+    } catch (error) {
+        next(error);
+    }
+
+  };
+
+
+  module.exports.resetPassword = async (req, res, next) => {
+    
+    try {
+        const  {email, password} = req.body;
+        await resetPasswordService(email, req.params.resettoken, password)
+
+        return res.status(200).json({
+            message : "password reset successfully" 
+        });
+        
+    } catch (error) {
+        next(error);
+    }
+  
+  };
