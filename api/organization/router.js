@@ -35,9 +35,9 @@ router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
 router.post('/createTeam', isolate, createTeam)
-router.put('/updateUserMaritalStatus', isolate, updateMaritalStatus)
-router.put('/updateUserAddress', isolate, updateUserAddress)
-router.put('/updateUserStatus', isolate, updateUserStatus)
+// router.put('/updateUserMaritalStatus', isolate, updateMaritalStatus)
+// router.put('/updateUserAddress', isolate, updateUserAddress)
+// router.put('/updateUserStatus', isolate, updateUserStatus)
 
 
 router.get('/getEmployees', isolate, getEmployees)
