@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const pool = require('../../config/dbconfig');
-const AppError = require('../../utils/ErrorHandler')
+const {AppError} = require('../../utils/ErrorHandler')
 const config = require('../../config/index');
 const format = require('pg-format');
 

@@ -44,7 +44,7 @@ class Organization{
 
         if (result.rows.length !== 0) {
             throw new AppError('You already have account please login', 403);
-        }
+        }   
         const newPass = await bcrypt.hash(password, 10);
 
         const createOrgSQL = format('INSERT INTO organization (name, email,phonenumber, password, status ,createdat) VALUES(%L, %L, %L, %L, %L, %L)', name, email, phoneNumber, newPass,'InActive', new Date());
@@ -79,6 +79,116 @@ class Organization{
 
     }
     }
+
+    static async createTeam(team_name,status) {
+        const client = await pool.connect();
+
+        const querystring = `Select * from team where team_name = $1`;
+        const value = [team_name];
+
+        const result = await client.query(querystring, value);
+
+        if (result.rows.length !== 0) {
+            throw new AppError(`new team Created successfully with the name of ${team_name}!`, 403);
+        }
+
+        const createOrgSQL = format('INSERT INTO team (team_name, status, createdat) VALUES (%L, %L, %L)', team_name,status, new Date());
+
+        const team = await client.query(createOrgSQL);
+       
+        await client.release()
+
+        return team;
+
+
+    }
+    static async addEmployeeData(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password) {
+        const client = await pool.connect();
+
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+        
+        const querystring = `Select * from users where email = $1`;
+        const value = [email];
+
+        const result = await client.query(querystring, value);
+
+        console.log(result.rows)
+        if (result.rows.length !== 0) {
+            throw new AppError('You already have created employee with this account please login', 403);
+        }
+        const newPass = await bcrypt.hash(password, 10);
+        console.log(newPass)
+
+        const createOrgSQL = format('INSERT INTO users (firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password, createdat, passwordchangedat) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)', firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, newPass, new Date(), new Date());
+
+        const users = await client.query(createOrgSQL);
+       
+        await client.release()
+
+        return users;
+
+    }
+
+    static async addEmployeeAddress(empid, country, city, subcity, wereda, housenumber){
+        const client = await pool.connect();
+
+        
+        const querystring = `Select * from user_address where empid = $1`;
+        const value = [empid];
+
+        const result = await client.query(querystring, value);
+        console.log(result.rows)
+        if (result.rows.length !== 0) {
+            throw new AppError('You already have created  address with this employee', 403);
+        }
+
+        const createOrgSQL = format('INSERT INTO user_address (empid, country, city, subcity, wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)', empid, country, city, subcity, wereda, housenumber, new Date());
+
+        const users_addres = await client.query(createOrgSQL);
+       
+        await client.release()
+
+        return users_addres;
+    }
+
+    static async addEmployeeMaritalStatus(status, userid, numberofchildren){
+        const client = await pool.connect();
+
+        
+        const querystring = `Select * from user_marital_status where userid = $1`;
+        const value = [userid];
+
+        const result = await client.query(querystring, value);
+
+        if (result.rows.length !== 0) {
+            throw new AppError('You already have created  marital status with this employee', 403);
+        }
+
+        const createOrgSQL = format('INSERT INTO user_marital_status (status, userid, numberofchildren, createdat) VALUES (%L, %L, %L, %L)', status, userid, numberofchildren, new Date());
+
+        const users_marital_status = await client.query(createOrgSQL);
+       
+        await client.release()
+
+        return users_marital_status;
+    }
+
+    static async addEmployeeStatus(userid,yearlyrest,probation,numberofprobation,status){
+        const client = await pool.connect();
+
+        
+
+        const createOrgSQL = format('INSERT INTO user_status (userid,yearlyrest,probation,numberofprobation,status, createdat) VALUES (%L, %L,%L, %L, %L, %L)', userid,yearlyrest,probation,numberofprobation,status, new Date());
+
+        const users_status = await client.query(createOrgSQL);
+       
+        await client.release()
+
+        return users_status;
+
+    }
+
 }
 
 

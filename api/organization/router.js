@@ -6,7 +6,7 @@ const format = require('pg-format');
 
 
 
-const {login, registerOrganization,createOrg, updateEmployee, getEmployees, getOneEmployee, deleteEmployee,addEmployee} = require('../../controllers/organization');
+const {login, registerOrganization,createOrg, updateEmployee, getEmployees, getOneEmployee, deleteEmployee,addEmployeeData, addEmployeeStatus, addEmployeeAddress,addEmployeeMaritalStatus,createTeam} = require('../../controllers/organization');
 const { route } = require('../../loaders/app');
 const pool =require('../../config/dbconfig');
 
@@ -33,15 +33,22 @@ router.get('/getTame',isolate, async (req, res, next)=>{
                 
         } catch (error) {
                 next(error)
-                
+     get           
         }
        
 })
-router.post('/organization/addEmployee', isolate, addEmployee)
-router.get('/organization/getEmployees', isolate, getEmployees)
-router.get('/organization/getOneEmployee', isolate, getOneEmployee)
-router.put('/organization/updateEmployee/:id',isolate, updateEmployee)
-router.delete('/organization/deleteEmployee/:id', isolate, deleteEmployee)
+
+router.post('/addEmployeeData', isolate, addEmployeeData)
+router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
+router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
+router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
+router.post('/createTeam', isolate, createTeam)
+
+
+router.get('/getEmployees', isolate, getEmployees)
+router.get('/getOneEmployee', isolate, getOneEmployee)
+router.put('/updateEmployee/:id',isolate, updateEmployee)
+router.delete('/deleteEmployee/:id', isolate, deleteEmployee)
 
 
 module.exports= router;
