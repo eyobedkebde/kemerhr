@@ -24,18 +24,18 @@ module.exports.createTeamService = async (team_name,status)=>{
 }
 
 
-module.exports.addEmployeeDataService = async (file, firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password)=>{
-    var pictureURL, picturePublic;
+module.exports.addEmployeeDataService = async (firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password)=>{//file, 
+    // var pictureURL, picturePublic;
 
-    await cloudinary.uploader
-    .upload(file.path, { folder: "kemerhr/user" })
-    .then((result) => {
-        console.log(result)
-      pictureURL = result.secure_url;
-      picturePublic = result.public_id;
-    }).finally((result)=>console.log(result));
+    // await cloudinary.uploader
+    // .upload(file.path, { folder: "kemerhr/user" })
+    // .then((result) => {
+    //     console.log(result)
+    //   pictureURL = result.secure_url;
+    //   picturePublic = result.public_id;
+    // }).finally((result)=>console.log(result));
 
-    return await organizationDAL.addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password);
+    return await organizationDAL.addEmployeeData( "pictureURL", "picturePublic",firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password);
 }
 
 
@@ -65,12 +65,19 @@ module.exports.getOneEmployeeService = async(email)=>{
 }
 
 
-
+/**
+ * get all employees
+ * @returns Promise
+ */
 module.exports.getEmployeesService = async()=>{
     return await organizationDAL.getAllEmployee();
 }
 
-
+/**
+ * deletes the user from database
+ * @param {string} id -user id
+ * @returns 
+ */
 module.exports.deleteEmployeeService = async(id)=>{
     return await organizationDAL.deleteEmployee(id)
 }

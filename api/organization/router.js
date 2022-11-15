@@ -19,8 +19,9 @@ const fileUpload = require('../../utils/uploadFile');
 const router= Router();
 
 router.post('/addEmployeeData', isolate, 
-allowedFileTypes('jpeg', 'jpg', 'png'), 
-        fileUpload.single('photo'), addEmployeeData);
+// allowedFileTypes('jpeg', 'jpg', 'png'), 
+//         fileUpload.single('photo'),
+         addEmployeeData);
 
 router.post('/login',login);
 

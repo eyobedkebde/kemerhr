@@ -31,11 +31,11 @@ class Organization{
         
         const client = await pool.connect();
 
-        // await client.query(`CREATE TABLE organization (id UUID PRIMARY KEY DEFAULT 
-        //     gen_random_uuid(), name character varying(100) NOT NULL,
-        //      email character varying(100) NOT NULL, phonenumber character varying(100)
-        //       NOT NULL, password TEXT NOT NULL,status character varying(100) NOT NULL,
-        //       createdat date NOT NULL, UNIQUE(email), UNIQUE(name));`);
+        await client.query(`CREATE TABLE organization (id UUID PRIMARY KEY DEFAULT 
+            gen_random_uuid(), name character varying(100) NOT NULL,
+             email character varying(100) NOT NULL, phonenumber character varying(100)
+              NOT NULL, password TEXT NOT NULL,status character varying(100) NOT NULL,
+              createdat date NOT NULL, UNIQUE(email), UNIQUE(name));`);
 
         const querystring = `Select * from organization where email = $1`;
         const value = [email];
