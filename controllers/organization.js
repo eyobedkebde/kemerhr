@@ -1,16 +1,19 @@
 
-const {forgotPasswordService,loginService, resgisterOrgService,removeFeedbacksService,
-    createTeamService,addEmployeeStatusService, addEmployeeAddressService,
-     setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,
-     getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService,
-      createInternalNoticeService,resetPasswordService,getAllNoties,removeNoticeService,getAllFeedbacks  } = require('../services/organization')
-const {AppError} = require('../utils/ErrorHandler')
+const { loginService, resgisterOrgService, createTeamService,
+    addEmployeeStatusService, addEmployeeAddressService,
+    setOrganizationCreated, addEmployeeDataService,
+    addEmployeeMaritalStatusService, getEmployeesService,
+    getOneEmployeeService, updateEmployeeService, deleteEmployeeService,
+    getAllNoties, createInternalNoticeService, removeNoticeService, 
+    updateUserMaritalStatusServies, updateUserAddressServies, 
+    updateUserStatusServies} = require('../services/organization')
+const { AppError } = require('../utils/ErrorHandler');
 
-module.exports.login = async (req, res, next)=>{
-    try{
-        const {email, password} = req.body;
-        if(! email || !password){
-           throw new AppError("please provide email", 403)
+module.exports.login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            throw new AppError("please provide email", 403)
         }
 
         const { token, user } = await loginService(email, password);
@@ -312,3 +315,44 @@ module.exports.forgotPassword = async (req, res, next) => {
     }
   
   };
+module.exports.updateUserStatus = async (req,res,next) =>{
+    try {
+        const {yearlyrest, probation, numberofprobation, status} = req.body;
+
+        await updateUserStatusServies(req.params.id,yearlyrest, probation, numberofprobation, status)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of ${req.tenantId}!`
+        });
+    } catch (error) {
+        next(error)
+        
+    }
+}
+module.exports.updateUserAddress = async (req, res, next) =>{
+    try {
+        const {country, city, subcity,wereda, housenumber} = req.body;
+
+        await updateUserAddressServies(req.params.id,country, city, subcity,wereda, housenumber)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of ${req.tenantId}!`
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+module.exports.updateUserMaritalStatus = async (req, res, next) =>{
+    try {
+        const {status, numberofchildren} = req.body;
+
+        await updateUserMaritalStatusServies(req.params.id, status, numberofchildren)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of ${req.tenantId}!`
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+

@@ -9,7 +9,9 @@ const {login, registerOrganization,createOrg,
         updateEmployee, getEmployees, getOneEmployee, deleteEmployee,
         addEmployeeData, addEmployeeStatus, addEmployeeAddress,
         addEmployeeMaritalStatus,createTeam,createInternalNotice, 
-        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword
+        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword,
+        
+        updateUserAddress, updateUserStatus, updateUserMaritalStatus
         } = require('../../controllers/organization');
 
 
@@ -35,9 +37,9 @@ router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
 router.post('/createTeam', isolate, createTeam)
-// router.put('/updateUserMaritalStatus', isolate, updateMaritalStatus)
-// router.put('/updateUserAddress', isolate, updateUserAddress)
-// router.put('/updateUserStatus', isolate, updateUserStatus)
+router.put('/updateUserMaritalStatus', isolate, updateUserMaritalStatus)
+router.put('/updateUserAddress', isolate, updateUserAddress)
+router.put('/updateUserStatus', isolate, updateUserStatus)
 
 
 router.get('/getEmployees', isolate, getEmployees)

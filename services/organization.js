@@ -103,3 +103,15 @@ module.exports.forgotPasswordService = async(email)=>{
 module.exports.resetPasswordService = async(email, resettoken, password )=>{   
     return await organizationDAL.resetPassword(email, resettoken, password );
 }
+module.exports.updateUserMaritalStatus = async(id, status, numberofchildren)=>{
+    return await organizationDAL.updateUserMaritalStatus(id, status, numberofchildren)
+}
+
+module.exports.updateUserAddressServies = async(id,country, city, subcity,wereda, housenumber)=>{
+    return await organizationDAL.updateUserAddress(id, country, city, subcity,wereda, housenumber)
+}
+
+module.exports.updateUserStatus = async(id, yearlyrest, probation, numberofprobation, status)=>{
+    return await organizationDAL.updateUserStatus(id,yearlyrest, probation, numberofprobation, status)
+}
+
