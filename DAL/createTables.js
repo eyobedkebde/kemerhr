@@ -4,10 +4,14 @@ const {AppError} = require('../utils/ErrorHandler');
 const format = require('pg-format');
 
 class Create{
+    /**
+     * create a schema for the tenant
+     * @param {Number} tenantId 
+     * @returns 
+     */
     static async createSchema(tenantId){
         const client = await pool.connect();
         try{
-            console.log("one")
             const spquery = format("SELECT status from organization where name = %L", tenantId)
             const searchPath = await pool.query(spquery);
             
@@ -26,14 +30,14 @@ class Create{
         }catch(err){
             await client.query(`ROLLBACK`);
             await client.release();
-            console.log(err)
 
         }
     }
-
+    /**
+     * create user and team table
+     */
     static async createUserAndTeam(){
         const client = await pool.connect();
-        console.log("two")
 
        try{
             
@@ -50,7 +54,7 @@ class Create{
                 name: 'create_users',
                 text: `CREATE TABLE users ( id SERIAL, firstname character varying(100) NOT NULL,lastname character varying(100) NOT NULL,
                     email character varying(100) NOT NULL,phone_number integer NOT NULL,gender character(8) NOT NULL,birthdate date NOT NULL,
-                    img text NOT NULL, role character varying(100) NOT NULL, teamid integer NOT NULL, password text NOT NULL,
+                    img text NOT NULL,imgpub text NOT NULL, role character varying(100) NOT NULL, teamid integer NOT NULL, password text NOT NULL,
                     passwordchangedat timestamp with time zone NOT NULL,createdat timestamp with time zone NOT NULL,resetPasswordToken character varying(100), resetPasswordExpire character varying(100) ,PRIMARY KEY(id),  
                     CONSTRAINT team_id FOREIGN KEY(teamid) REFERENCES team(id) ON DELETE CASCADE
                 );`
@@ -70,6 +74,9 @@ class Create{
         }
     }
 
+    /**
+     * create complained and employee address table
+     */
     static async createComplainndEmpAddress(){
 
         const client = await pool.connect();
@@ -107,6 +114,9 @@ class Create{
         }
     }
    
+    /**
+     * create emp status and maritial table
+     */
     static async createEmpStatusAndEmpMartia(){
 
         const client = await pool.connect();
@@ -143,6 +153,9 @@ class Create{
         }
     }
     
+    /**
+     * create internal notice and feedback table
+     */
     static async createInternalNotiAndFeedback(){
 
         const client = await pool.connect();

@@ -13,8 +13,8 @@ module.exports.complainService = async(complainedon, content, complainer)=>{
     await employeeDAL.complain(complainedon, content, complainer);
 }
 
-module.exports.giveFeedBack = async(userid, title, content)=>{
-    await employeeDAL.giveFeedback(userid, title, content);
+module.exports.giveFeedBack = async(userid, title, content, tenantId)=>{
+    await employeeDAL.giveFeedback(userid, title, content, tenantId);
 }
 
 module.exports.removeComplainService = async(complainId)=>{
@@ -47,6 +47,6 @@ module.exports.updateMyPofile = async(file, userId)=>{
     });
 
     const user = await employeeDAL.updateProfilep(pictureURL,picturePublic, userId);
-    console.log(user, picturePublic)
+
     return [user, picturePublic];
 }

@@ -1,5 +1,9 @@
 
-const {forgotPasswordService,loginService, resgisterOrgService,removeFeedbacksService,createTeamService,addEmployeeStatusService, addEmployeeAddressService, setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService, resetPasswordService  } = require('../services/organization')
+const {forgotPasswordService,loginService, resgisterOrgService,removeFeedbacksService,
+    createTeamService,addEmployeeStatusService, addEmployeeAddressService,
+     setOrganizationCreated, addEmployeeDataService, addEmployeeMaritalStatusService,
+     getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService,
+      createInternalNoticeService,resetPasswordService,getAllNoties,removeNoticeService,getAllFeedbacks  } = require('../services/organization')
 const {AppError} = require('../utils/ErrorHandler')
 
 module.exports.login = async (req, res, next)=>{
@@ -31,11 +35,10 @@ module.exports.registerOrganization = async (req, res, next) => {
             throw new AppError("Field can't be empty", 403);
         }
 
-        const user = await resgisterOrgService(name, email, password, phoneNumber);
+        await resgisterOrgService(name, email, password, phoneNumber);
 
         res.json({
             message: "Registed successfully!",
-            user: user
 
         })
     } catch (error) {
@@ -74,18 +77,16 @@ module.exports.createTeam = async (req, res, next) => {
 
 
 module.exports.addEmployeeData = async(req, res, next)=>{
-    console.log(req.body)
     try{
-        const {firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password} = req.body;
+        const {firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password} = req.body;
         
-        await addEmployeeDataService(firstname,lastname,email,phone_number,gender,birthdate,img, role, teamid, password)
+        await addEmployeeDataService(firstname,lastname,email,phone_number,gender,birthdate, role, teamid, password)
         
         res.json({
             message: `new employee Created successfully`,
         });
 
     } catch (err) {
-        console.log(err)
         next(err)
     }
 }
@@ -276,7 +277,6 @@ module.exports.forgotPassword = async (req, res, next) => {
         
             const {email} = req.body;
 
-            console.log(email)
             const result = await forgotPasswordService(email)
         
             // Create reset url
@@ -284,9 +284,9 @@ module.exports.forgotPassword = async (req, res, next) => {
             'host',
             )}/api/v1/organization/resetpassword/${result}`;
         
-            // const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+            const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
             return res.status(200).json({
-                // message
+                message,
                 result
             })
                     

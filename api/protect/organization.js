@@ -24,14 +24,13 @@ exports.isolate = async (req, res, next) => {
 
         var sql = format('SELECT * FROM %I WHERE name = %L', 'organization', compData.id);
 
-        const user = await pool.query(sql).catch(err=>console.log(err));
+        const user = await pool.query(sql);
 
         if(user.rows.length === 0){
           throw new AppError("please login with your correct credential!!", 403)
         }
 
         if(user.rows[0].status === 'Active'){
-          console.log(compData.id);
           let sql = format('SET search_path TO %L, public', compData.id);
           await pool.query(sql);
         }

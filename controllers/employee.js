@@ -22,6 +22,29 @@ module.exports.login = async (req, res, next)=>{
         next(err)
     }
 }
+module.exports.updateProfile = async (req, res, next)=>{
+    try {
+  
+      if (!req.file) {
+        return next(new AppError("not file uploaded, please upload file", 400));
+      }
+  
+      const data = await updateMyPofile(req. file, req.userId)
+  
+      //  return the data after saving to database
+      res.status(200).json({
+        success: true,
+        message: "profile picture has been updated/uploaded",
+        data: data[0],//user
+      });
+    } catch (error) {
+      // destroy the uploaded if it is uploaded but their is a problem while save to database
+      if (data[1]) {
+        await cloudinary.uploader.destroy(data[1]);
+      }
+      next(new AppError(error.message, 500));
+    }
+  }
 
 module.exports.complain = async (req, res, next)=>{
     try{
@@ -80,11 +103,11 @@ module.exports.feedback = async (req, res, next)=>{
     try{
         const {title, content} = req.body;
 
-        if(! complainedon || !content){
+        if(! title || !content){
            throw new AppError("please provide the proper fields", 403)
         }
 
-        await giveFeedBack(req.userId, title, content);
+        await giveFeedBack(req.userId, title, content, req.tenantId);
 
         res.json({
             message: "Your feedback has been taken successfuly!"
@@ -103,7 +126,6 @@ module.exports.forgotPassword = async (req, res, next) => {
         
             const {email, organization_name} = req.body;
 
-            console.log(email, organization_name)
             const result = await forgotPasswordService(email, organization_name)
         
             // Create reset url

@@ -12,13 +12,9 @@ const {login, registerOrganization,createOrg,
         getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword
         } = require('../../controllers/organization');
 
-const allowedFileTypes = require('../../utils/fileFilters')
-
-const fileUpload = require('../../utils/uploadFile');
 
 const router= Router();
 
-const { AppError } = require('../../utils/ErrorHandler');
 
 router.post('/forgotPassword', forgotPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
@@ -56,8 +52,5 @@ router.route('/feedback').
         get(isolate, getFeedbacks).
         delete(isolate, removeFeedbacks);
 
-router.post('/addEmployeeData', isolate, 
-        // allowedFileTypes('jpeg', 'jpg', 'png'), 
-        //         fileUpload.single('photo'),
-addEmployeeData);
+router.post('/addEmployeeData', isolate, addEmployeeData);
 module.exports= router;

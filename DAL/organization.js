@@ -39,7 +39,6 @@ class Organization{
         //       resetPasswordToken character varying(100), resetPasswordExpire character varying(100),
         //       createdat date NOT NULL, UNIQUE(email), UNIQUE(name));`);
 
-        console.log( name, email, phoneNumber, newPass,'InActive', new Date())
         const querystring = `Select * from organization where email = $1`;
         const value = [email];
 
@@ -52,11 +51,10 @@ class Organization{
 
         const createOrgSQL = format('INSERT INTO organization (name, email,phonenumber, password, status ,createdat) VALUES(%L, %L, %L, %L, %L, %L)', name, email, phoneNumber, newPass,'InActive', new Date());
 
-        const company = await client.query(createOrgSQL);
+        await client.query(createOrgSQL);
        
         await client.release()
 
-        return company;
 
     }
 
@@ -71,9 +69,6 @@ class Organization{
 
             await client.query(`SET search_path TO ${tenantId}, public;`);
 
-            // const b=await client.query(`show search_path;`);
-
-            // console.log(b)
             await client.release();
 
     }
@@ -108,6 +103,12 @@ class Organization{
     static async removeExistingNotice(noticeId) {
         const client = await pool.connect();
 
+        const not = format('SELECT * FROM internalnotice WHERE id= %L', noticeId)
+        const result = await client.query(not);
+
+        if(result.rows.length === 0){
+            throw new AppError('selected notice does not exists', 401);
+        }
         const noticeSQL = format('DELETE FROM internalnotice WHERE id= %L', noticeId)
         await client.query(noticeSQL);
 
@@ -124,6 +125,14 @@ class Organization{
     
     static async removeFeedback(feedbackId) {
         const client = await pool.connect();
+        const feed = format('SELECT * FROM feedback WHERE id= %L', feedbackId)
+
+        const result = await client.query(feed);
+
+        if(result.rows.length ===0){
+            throw new AppError('selected feedback does not exists', 401);
+        }
+
         const feedbackSQL = format('DELETE FROM feedback WHERE id= %L', feedbackId)
 
         await client.query(feedbackSQL);
@@ -187,16 +196,22 @@ class Organization{
 
         
         const querystring = `Select * from user_address where empid = $1`;
+        const querystringUser = `Select * from users where id = $1`;
         const value = [empid];
 
         const result = await client.query(querystring, value);
+        const resultUser = await client.query(querystringUser, value);
 
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
         }
+        if (resultUser.rows.length === 0) {
+            throw new AppError('User does not exists', 403);
+        }
 
         const createOrgSQL = format(`INSERT INTO user_address (empid, country, city, subcity,
-             wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)`, empid, country, city, subcity, wereda, housenumber, new Date());
+             wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)`, 
+             empid, country, city, subcity, wereda, housenumber, new Date());
 
         const users_addres = await client.query(createOrgSQL);
        
@@ -210,15 +225,22 @@ class Organization{
 
         
         const querystring = `Select * from user_marital_status where userid = $1`;
+        const querystringUser = `Select * from users where id = $1`;
+
         const value = [userid];
 
         const result = await client.query(querystring, value);
+        const resultUser = await client.query(querystringUser, value);
 
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  marital status with this employee', 403);
         }
+        if (resultUser.rows.length === 0) {
+            throw new AppError('User does not exists', 403);
+        }
 
-        const createOrgSQL = format('INSERT INTO user_marital_status (status, userid, numberofchildren, createdat) VALUES (%L, %L, %L, %L)', status, userid, numberofchildren, new Date());
+        const createOrgSQL = format(`INSERT INTO user_marital_status (status, userid,
+             numberofchildren, createdat) VALUES (%L, %L, %L, %L)`, status, userid, numberofchildren, new Date());
 
         const users_marital_status = await client.query(createOrgSQL);
        
@@ -231,15 +253,24 @@ class Organization{
         const client = await pool.connect();
                 
         const querystring = `Select * from user_status where userid = $1`;
+        const querystringUser = `Select * from users where id = $1`;
+
         const value = [userid];
 
         const result = await client.query(querystring, value);
+        const resultUser = await client.query(querystringUser, value);
 
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  user status info with this employee', 403);
         }
+        if (resultUser.rows.length === 0) {
+            throw new AppError('User does not exists', 403);
+        }
 
-        const createOrgSQL = format('INSERT INTO user_status (userid,yearlyrest,probation,numberofprobation,status, createdat) VALUES (%L, %L,%L, %L, %L, %L)', userid,yearlyrest,probation,numberofprobation,status, new Date());
+
+        const createOrgSQL = format(`INSERT INTO user_status (userid,yearlyrest,probation,
+            numberofprobation,status, createdat) VALUES (%L, %L,%L, %L, %L, %L)`, 
+            userid,yearlyrest,probation,numberofprobation,status, new Date());
 
         const users_status = await client.query(createOrgSQL);
        
@@ -310,7 +341,7 @@ class Organization{
         const value = [id];
 
         const employee = await client.query(selectstring, value);
-        console.log(employee.rows)
+
         if (employee.rows.length === 0) {
             throw new AppError(`their is no employee with this  ${id}`, 403);
         }

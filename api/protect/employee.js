@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const pool = require('../../config/dbconfig');
-const AppError = require('../../utils/ErrorHandler')
+const {AppError} = require('../../utils/ErrorHandler')
 const config = require('../../config/index');
 const format = require('pg-format');
 
@@ -32,13 +32,13 @@ exports.isolateOrgAndUser = async (req, res, next) => {
         
         if(organization.rows[0].status === 'Active'){
           let sql = format('SET search_path TO %L, public', compData.id);
-          await pool.query(sql);
+          await pool.query(sql); 
         }
 
         const emplSql = format('SELECT id from users where id= %L', compData.userId)
         
         const employee = await pool.query(emplSql);
-        console.log(employee.rows)
+
         req.tenantId = compData.id;
         
         req.userId = employee.rows[0].id;

@@ -6,7 +6,13 @@ const crypto = require('crypto')
 
 
 class Employee{
-
+    /**
+     * login authentication dal
+     * @param {string} email 
+     * @param {string} password 
+     * @param {string} compName 
+     * @returns 
+     */
     static async login(email, password, compName) {
         const client = await pool.connect();
 
@@ -17,7 +23,8 @@ class Employee{
         if (result.rows.length === 0) {
             throw new AppError('wrong organization name please use the correct one', 403);
         }
-
+        
+        // change look schema based on user input organization id
         let sql = format('SET search_path TO %L, public', compName);
         await pool.query(sql);
 
@@ -39,7 +46,12 @@ class Employee{
        return {user: empl,org: result} 
     
     }
-
+    /**
+     * create a complain report DAO
+     * @param {number} complainedon 
+     * @param {string} content 
+     * @param {id} complainer 
+     */
     static async complain(complainedon, content, complainer){
         const client = await pool.connect();
 
@@ -57,6 +69,10 @@ class Employee{
         await client.release()
         
     }
+    /**
+     * remove my complain from db
+     * @param {number} complainId 
+     */
     static async removeComplain(complainId){
         const client = await pool.connect();
 
@@ -74,6 +90,11 @@ class Employee{
         await client.release()
         
     }
+    /**
+     * get a single complain
+     * @param {number} complainId 
+     * @returns 
+     */
     static async getOneComplain(complainId){
         const client = await pool.connect();
 
@@ -88,14 +109,17 @@ class Employee{
         
         return compdata.rows;
     }
-    
-    static async giveFeedback(userid, title, content){
+    /**
+     * create a feedback 
+     * @param {number} userid 
+     * @param {string} title 
+     * @param {string} content 
+     */
+    static async giveFeedback(userid, title, content, tenantId){
         const client = await pool.connect();
 
-        const feedSQL = format('INSERT INTO feedback (userid, title, content, createdat ) VALUES(%L, %L, %L, %L)', userid, title, content, new Date());
-
-        await pool.query(feedSQL)
-        
+        const feedSQL = format('INSERT INTO %I.feedback (userid, title, content, createdat ) VALUES(%L, %L, %L, %L)', tenantId,userid, title, content, new Date());
+        await pool.query(feedSQL);
         await client.release()
         
     }
@@ -154,7 +178,7 @@ class Employee{
         const value = [resetPasswordToken, Date.now()];
 
         const result = await client.query(querystring, value);
-        console.log(Date.now())
+        
         if (result.rows.length === 0) {
             throw new AppError('Invalid token', 400);
         }
