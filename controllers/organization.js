@@ -6,7 +6,8 @@ const { loginService, resgisterOrgService, createTeamService,
     getOneEmployeeService, updateEmployeeService, deleteEmployeeService,
     getAllNoties, createInternalNoticeService, removeNoticeService, 
     updateUserMaritalStatusServies, updateUserAddressServies, 
-    updateUserStatusServies} = require('../services/organization')
+    updateUserStatusServies, getAllFeedbacks, removeFeedbacksService, 
+    forgotPasswordService, resetPasswordService} = require('../services/organization')
 const { AppError } = require('../utils/ErrorHandler');
 
 
@@ -181,7 +182,6 @@ module.exports.addEmployeeStatus = async (req, res, next) => {
     }
 }
 
-// getEmployeesService, getOneEmployeeService, updateEmployeeService,deleteEmployeeService 
 
 module.exports.updateEmployee = async (req, res, next) => {
     try {
@@ -219,8 +219,8 @@ module.exports.getEmployees = async (req, res, next) => {
         const result = await getEmployeesService()
 
         res.json({
-            data: result,
             message: `success`,
+            data: result
         });
 
     } catch (err) {
@@ -375,6 +375,7 @@ module.exports.updateUserAddress = async (req, res, next) =>{
         const {country, city, subcity,wereda, housenumber} = req.body;
 
         await updateUserAddressServies(req.params.id,country, city, subcity,wereda, housenumber)
+        
         res.json({
             success:"True", 
             message: `Employee status updated successfully with the name of ${req.tenantId}!`

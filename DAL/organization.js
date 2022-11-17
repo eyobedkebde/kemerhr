@@ -32,12 +32,6 @@ class Organization{
         
         const client = await pool.connect();
 
-        // await client.query(`CREATE TABLE organization (id UUID PRIMARY KEY DEFAULT 
-        //     gen_random_uuid(), name character varying(100) NOT NULL,
-        //      email character varying(100) NOT NULL, phonenumber character varying(100)
-        //       NOT NULL, password TEXT NOT NULL,status character varying(100) NOT NULL,
-        //       resetPasswordToken character varying(100), resetPasswordExpire character varying(100),
-        //       createdat date NOT NULL, UNIQUE(email), UNIQUE(name));`);
 
         const querystring = `Select * from organization where email = $1`;
         const value = [email];
@@ -49,7 +43,8 @@ class Organization{
         }   
         const newPass = await bcrypt.hash(password, 10);
 
-        const createOrgSQL = format('INSERT INTO organization (name, email,phonenumber, password, status ,createdat) VALUES(%L, %L, %L, %L, %L, %L)', name, email, phoneNumber, newPass,'InActive', new Date());
+        const createOrgSQL = format(`INSERT INTO organization (name, email,phonenumber, password,
+             status ,createdat) VALUES(%L, %L, %L, %L, %L, %L)`, name, email, phoneNumber, newPass,'InActive', new Date());
 
         await client.query(createOrgSQL);
        
@@ -76,9 +71,8 @@ class Organization{
     static async createaNotice(content, title, postby) {
       const client = await pool.connect();
 
-            //REMEMBER TO REMOVE THE THE NUMBER OF READ AND READ FIELD
-            //OR TRY TO POST THE INTERNAL NOTICE BASED ON TRIGGERED DELETE
-            const createNoticeSQL = format("INSERT INTO internalnotice(title, content, postedby, createdAt) VALUES(%L, %L, %L, %L)", title, content, postby, new Date());
+            const createNoticeSQL = format(`INSERT INTO internalnotice(title, content, 
+                postedby, createdAt) VALUES(%L, %L, %L, %L)`, title, content, postby, new Date());
 
             await client.query(createNoticeSQL);
 
@@ -88,9 +82,6 @@ class Organization{
     
     static async getcreatedNoices() {
       const client = await pool.connect();
-
-            //REMEMBER TO REMOVE THE THE NUMBER OF READ AND READ FIELD
-            //OR TRY TO POST THE INTERNAL NOTICE BASED ON TRIGGERED DELETE
 
             const noticess = await client.query("Select * from internalnotice;",);
 
@@ -115,7 +106,7 @@ class Organization{
         await client.release();
     }
 
-    static async getFeedbacks() {
+    static async getAllFeedbacks() {
         const client = await pool.connect();
         const feedbacks = await client.query("SELECT * FROM feedback;");
 
@@ -164,7 +155,7 @@ class Organization{
     }
     static async addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password) {
         const client = await pool.connect();
-        console.log(pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password);
+
         const querystring = `Select * from users where email = $1`;
         const value = [email];
 
@@ -199,14 +190,15 @@ class Organization{
         const value = [empid];
 
         const result = await client.query(querystring, value);
+        const addresult = await client.query(querystringUser, value);
         
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
         }
-        
-        // if (result.rows.length === 0) {
-        //     throw new AppError('Please create a user account for the data be inserted', 403);
-        // }
+       
+        if (addresult.rows.length === 0) {
+            throw new AppError('there is no employee related with this user id', 403);
+        }
 
         const createOrgSQL = format(`INSERT INTO user_address (empid, country, city, subcity,
              wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)`, 
@@ -467,6 +459,7 @@ class Organization{
         }
         const createUserAddress = `UPDATE user_address  SET  country= $1, city = $2, subcity = $3 , wereda = $4, housenumber= $5 WHERE id= $6;`;
         const queryValue = [ country, city, subcity,wereda, housenumber, id]
+        
         const userAddress = await client.query(createUserAddress,queryValue);
         await client.release();
         return userAddress

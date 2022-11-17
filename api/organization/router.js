@@ -25,10 +25,6 @@ router.put('/updateUserStatus/:id', isolate, updateUserStatus)
 router.put('/updateUserMaritalStatus/:id', isolate, updateUserMaritalStatus)
 
 
-router.post('/addEmployeeData', isolate, 
-// allowedFileTypes('jpeg', 'jpg', 'png'), 
-//         fileUpload.single('photo'),
-         addEmployeeData);
 
 router.post('/login',login);
 

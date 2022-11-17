@@ -55,6 +55,15 @@ class Employee{
     static async complain(complainedon, content, complainer){
         const client = await pool.connect();
 
+        const querystringUser = `Select * from users where id = $1`;
+
+        const value = [complainedon];
+       
+        const resultUser = await client.query(querystringUser, value);
+       
+        if (resultUser.rows.length === 0) {
+            throw new AppError('complained ser does not exists', 403);
+        }
         const findcompSQL =format('select * from complain where comper = %L AND complainedon = %L', complainer, complainedon);
         const compdata = await pool.query(findcompSQL);
 

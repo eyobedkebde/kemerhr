@@ -86,7 +86,7 @@ module.exports.removeNoticeService = async(noticeId)=>{
 }
 
 module.exports.getAllFeedbacks = async()=>{
-   const allFeedbacks= await organizationDAL.getFeedbacks();
+   const allFeedbacks= await organizationDAL.getAllFeedbacks();
    return allFeedbacks;
 }
 
