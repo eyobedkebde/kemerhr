@@ -9,7 +9,7 @@ const {login, registerOrganization,createOrg,
         updateEmployee, getEmployees, getOneEmployee, deleteEmployee,
         addEmployeeData, addEmployeeStatus, addEmployeeAddress,
         addEmployeeMaritalStatus,createTeam,createInternalNotice, 
-        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,
+        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword,
         updateUserAddr, updateUserStatus, updateUserMaritalStatus
         } = require('../../controllers/organization');
 
