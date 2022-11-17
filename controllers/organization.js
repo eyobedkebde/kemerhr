@@ -9,6 +9,47 @@ const { loginService, resgisterOrgService, createTeamService,
     updateUserStatusServies} = require('../services/organization')
 const { AppError } = require('../utils/ErrorHandler');
 
+
+module.exports.updateUserAddr = async (req, res, next) =>{
+    try {
+        const {country, city, subcity,wereda, housenumber} = req.body;
+
+        await updateUserAddressServies(req.params.id,country, city, subcity,wereda, housenumber)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of !`
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+module.exports.updateUserStatus = async (req,res,next) =>{
+    try {
+        const {yearlyrest, probation, numberofprobation, status} = req.body;
+        await updateUserStatusServies(req.params.id,yearlyrest, probation, numberofprobation, status)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of !`
+        });
+    } catch (error) {
+        next(error)
+        
+    }
+}
+
+module.exports.updateUserMaritalStatus = async (req, res, next) =>{
+    try {
+        const {status, numberofchildren} = req.body;
+
+        await updateUserMaritalStatusServies(req.params.id, status, numberofchildren)
+        res.json({
+            success:"True", 
+            message: `Employee status updated successfully with the name of!`
+        });
+    } catch (error) {
+        next(error)
+    }
+}
 module.exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -355,4 +396,6 @@ module.exports.updateUserMaritalStatus = async (req, res, next) =>{
         next(error)
     }
 }
+
+
 
