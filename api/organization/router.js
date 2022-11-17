@@ -9,7 +9,8 @@ const {login, registerOrganization,createOrg,
         updateEmployee, getEmployees, getOneEmployee, deleteEmployee,
         addEmployeeData, addEmployeeStatus, addEmployeeAddress,
         addEmployeeMaritalStatus,createTeam,createInternalNotice, 
-        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword
+        getallNotices,removeNotice,getFeedbacks, removeFeedbacks,forgotPassword, resetPassword,
+        updateUserAddr, updateUserStatus, updateUserMaritalStatus
         } = require('../../controllers/organization');
 
 
@@ -19,6 +20,15 @@ const router= Router();
 router.post('/forgotPassword', forgotPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
 
+router.route('/updateUserAddress/:id').put( isolate, updateUserAddr)
+router.put('/updateUserStatus/:id', isolate, updateUserStatus)
+router.put('/updateUserMaritalStatus/:id', isolate, updateUserMaritalStatus)
+
+
+router.post('/addEmployeeData', isolate, 
+// allowedFileTypes('jpeg', 'jpg', 'png'), 
+//         fileUpload.single('photo'),
+         addEmployeeData);
 
 router.post('/login',login);
 
@@ -35,6 +45,7 @@ router.post('/addEmployeeAddress', isolate, addEmployeeAddress)
 router.post('/addEmployeeMaritalStatus', isolate, addEmployeeMaritalStatus)
 router.post('/addEmployeeStatus', isolate, addEmployeeStatus)
 router.post('/createTeam', isolate, createTeam)
+
 
 
 router.get('/getEmployees', isolate, getEmployees)

@@ -164,7 +164,7 @@ class Organization{
     }
     static async addEmployeeData( pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password) {
         const client = await pool.connect();
-        
+        console.log(pictureURL, picturePublic,firstname,lastname,email,phone_number,gender,birthdate,role, teamid, password);
         const querystring = `Select * from users where email = $1`;
         const value = [email];
 
@@ -176,12 +176,11 @@ class Organization{
         
         const newPass = await bcrypt.hash(password, 10);
 
-        const createOrgSQL = format(`INSERT INTO users 
-        (firstname,lastname,email,phone_number,gender,birthdate,img, 
-            imgpub,role, teamid, password, createdat, passwordchangedat) 
-            VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L)`, 
-            firstname,lastname,email,phone_number,gender,birthdate,pictureURL,
-            picturePublic, role, teamid, newPass, new Date(), new Date());
+        const createOrgSQL = format(
+            `INSERT INTO users 
+            (firstname,lastname,email,phone_number,gender,birthdate,img, imgpub,role, teamid, password, createdat, passwordchangedat)  
+            VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L,  %L)`, 
+            firstname,lastname,email,phone_number,gender,birthdate,"pictureURL","picturePublic", role, teamid, newPass, new Date(), new Date());
 
         const users = await client.query(createOrgSQL);
        
@@ -200,14 +199,14 @@ class Organization{
         const value = [empid];
 
         const result = await client.query(querystring, value);
-        const resultUser = await client.query(querystringUser, value);
-
+        
         if (result.rows.length !== 0) {
             throw new AppError('You already have created  address with this employee', 403);
         }
-        if (resultUser.rows.length === 0) {
-            throw new AppError('User does not exists', 403);
-        }
+        
+        // if (result.rows.length === 0) {
+        //     throw new AppError('Please create a user account for the data be inserted', 403);
+        // }
 
         const createOrgSQL = format(`INSERT INTO user_address (empid, country, city, subcity,
              wereda, housenumber, createdat) VALUES (%L, %L, %L, %L, %L, %L, %L)`, 
@@ -417,6 +416,61 @@ class Organization{
 
         return true        
     }
+
+    static async updateUserMaritalStatus(id, status, numberofchildren){
+        
+        const client = await pool.connect();
+        const querystring = `SELECT * FROM user_marital_status where userid = $1`;
+        const value = [id]
+        
+        const result = await client.query(querystring,value);
+     
+        if (result.rows.length === 0) {
+            throw new AppError('There is no employee with this  id', 403);
+        }
+        const createUserMaritalStatus = `UPDATE user_marital_status  SET status = $1, numberofchildren = $2 WHERE id= $3;`;
+        const queryValue = [status,numberofchildren,result.rows[0].id]
+        const userMaritalStatus = await client.query(createUserMaritalStatus,queryValue);
+       
+        await client.release();
+        return userMaritalStatus
+    }  
+
+    static async updateUserStatus(id, yearlyrest, probation, numberofprobation, status){
+       
+        const client = await pool.connect();
+        const querystring = `SELECT * FROM user_status where userid = $1`;
+        const value = [id]
+        const result = await client.query(querystring,value);
+     
+        if (result.rows.length === 0) {
+            throw new AppError('There is no employee with this  id', 403);
+        }
+        const createUserStatus = `UPDATE user_status  SET status = $1, yearlyrest = $2 , probation = $3, numberofprobation = $4 WHERE id= $5;`;
+        const queryValue = [status,yearlyrest, probation, numberofprobation,result.rows[0].id]
+        const userStatus = await client.query(createUserStatus,queryValue);
+      
+
+        await client.release();
+        
+        return userStatus
+    } 
+
+    static async updateUserAddress(id, country, city, subcity,wereda, housenumber){
+
+        const client = await pool.connect();
+        const querystring = `SELECT * FROM user_address where empid = $1`;
+        const value = [id]
+        const result = await client.query(querystring,value);
+        if (result.rows.length === 0) {
+            throw new AppError('There is no employee with this  id', 403);
+        }
+        const createUserAddress = `UPDATE user_address  SET  country= $1, city = $2, subcity = $3 , wereda = $4, housenumber= $5 WHERE id= $6;`;
+        const queryValue = [ country, city, subcity,wereda, housenumber, id]
+        const userAddress = await client.query(createUserAddress,queryValue);
+        await client.release();
+        return userAddress
+    }  
 
 }
 
